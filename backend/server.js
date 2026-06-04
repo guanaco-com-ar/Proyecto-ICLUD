@@ -19,8 +19,8 @@ app.use("/api/hoteles", hotelesRouter);
 const PORT = 3000;
 
 app.listen(PORT, () => {
-    console.log('https:localhost:${PORT}');
-    console.log('https://localhost:3000/admin.html');
+    console.log('http://localhost:3000/index.html - Menu');
+    console.log('http://localhost:3000/admin.html - Administrador');
 });
 
 app.listen(PORT, () => {
