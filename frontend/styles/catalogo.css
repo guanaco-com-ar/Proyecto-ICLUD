@@ -1,0 +1,401 @@
+/* ==========================================================================
+   1. CONFIGURACIÓN GENERAL Y BASE
+   ========================================================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  background: #f5f5f5;
+  color: #222;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ==========================================================================
+   2. HEADER / NAVEGACIÓN (Fijo arriba)
+   ========================================================================== */
+header {
+  width: 100%;
+  padding: 20px 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  position: fixed;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, .1);
+}
+
+.logo {
+  font-size: 28px;
+  font-weight: bold;
+  color: #1e3a8a;
+}
+
+nav a {
+  margin-left: 25px;
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  transition: .3s;
+}
+
+nav a:hover,
+nav a.active {
+  color: #2563eb;
+}
+
+nav a.btn-register {
+  border: 2px solid #1e3a8a;
+  color: #1e3a8a;
+  padding: 8px 20px;
+  border-radius: 8px;
+}
+
+nav a.btn-register:hover {
+  background: #1e3a8a;
+  color: #fff;
+}
+
+nav a.btn-login {
+  background: #1e3a8a;
+  color: #fff;
+  padding: 8px 20px;
+  border-radius: 8px;
+}
+
+nav a.btn-login:hover {
+  background: #2563eb;
+}
+
+/* ==========================================================================
+   3. SECCIÓN DEL CATÁLOGO DE HOTELES (Ajustado para 5 por fila)
+   ========================================================================== */
+.catalogo-container {
+  flex: 1;
+  padding: 140px 60px 80px 60px; 
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.catalogo-title {
+  font-size: 35px;
+  margin-bottom: 40px;
+  text-align: left;
+  color: #111827;
+}
+
+.cards {
+  display: grid;
+  /* El mínimo de 200px permite que entren unas 5 tarjetas por fila en pantallas de PC */
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px; 
+}
+
+.card {
+  background: #fff;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, .08);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  position: relative;
+  height: fit-content;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+}
+
+/* Estado Expandido al hacer Click */
+.card.expanded {
+  transform: scale(1.05);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, .15);
+  z-index: 10;
+}
+
+.card img {
+  width: 100%;
+  height: 150px; /* Altura compactada */
+  object-fit: cover;
+}
+
+.card-content {
+  padding: 15px;
+}
+
+.card-content h3 {
+  margin-bottom: 8px;
+  font-size: 18px;
+}
+
+.card-content p {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.price {
+  color: #2563eb;
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+/* Botón interactivo de Reserva */
+.btn-reservar {
+  display: none; 
+  width: 100%;
+  margin-top: 15px;
+  padding: 10px;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  animation: fadeIn 0.3s ease;
+}
+
+.btn-reservar:hover {
+  background: #1d4ed8;
+}
+
+/* Muestra el botón sólo cuando la tarjeta está expandida */
+.card.expanded .btn-reservar {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   4. COMPONENTES: MODALES & FORMULARIOS
+   ========================================================================== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, .65);
+  backdrop-filter: blur(4px);
+  z-index: 2000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .3s;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.modal {
+  background: #fff;
+  border-radius: 24px;
+  width: 90%;
+  max-width: 440px;
+  padding: 40px;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, .3);
+  transform: translateY(30px) scale(.97);
+  transition: transform .35s cubic-bezier(.34, 1.56, .64, 1), opacity .3s;
+  opacity: 0;
+}
+
+.modal-overlay.active .modal {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+.modal-close {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  font-size: 24px;
+  cursor: pointer;
+  color: #888;
+  background: none;
+  border: none;
+  line-height: 1;
+  transition: color .2s;
+}
+
+.modal-close:hover {
+  color: #1e3a8a;
+}
+
+.modal-logo {
+  font-size: 26px;
+  font-weight: bold;
+  color: #1e3a8a;
+  margin-bottom: 6px;
+}
+
+.modal h2 {
+  font-size: 22px;
+  color: #111;
+  margin-bottom: 4px;
+}
+
+.modal-sub {
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 28px;
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: bold;
+  color: #444;
+  margin-bottom: 6px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 13px 16px;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 15px;
+  transition: border-color .2s, box-shadow .2s;
+  outline: none;
+  color: #222;
+}
+
+.form-group input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, .12);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.btn-submit {
+  width: 100%;
+  padding: 14px;
+  background: #1e3a8a;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background .3s, transform .15s;
+  margin-top: 6px;
+}
+
+.btn-submit:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+}
+
+.btn-submit:active {
+  transform: translateY(0);
+}
+
+.modal-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+  color: #bbb;
+  font-size: 13px;
+}
+
+.modal-divider::before,
+.modal-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #e5e5e5;
+}
+
+.modal-switch {
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+  margin-top: 20px;
+}
+
+.modal-switch a {
+  color: #2563eb;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.modal-switch a:hover {
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   5. COMPONENTES: FEEDBACK DE INTERFAZ (Toasts & Errores)
+   ========================================================================== */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: #111827;
+  color: #fff;
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: bold;
+  z-index: 3000;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, .25);
+  transition: transform .4s cubic-bezier(.34, 1.56, .64, 1), opacity .3s;
+  opacity: 0;
+}
+
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+.toast.success {
+  border-left: 4px solid #22c55e;
+}
+
+.toast.error {
+  border-left: 4px solid #ef4444;
+}
+
+.form-error {
+  font-size: 12px;
+  color: #ef4444;
+  margin-top: 5px;
+  display: none;
+}
+
+.form-error.visible {
+  display: block;
+}
+
+/* ==========================================================================
+   6. FOOTER Y AJUSTES FINALES
+   ========================================================================== */
+footer {
+  background: #111827;
+  color: #fff;
+  text-align: center;
+  padding: 30px;
+  margin-top: auto; 
+}
