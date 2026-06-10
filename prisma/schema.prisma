@@ -25,3 +25,13 @@ model hotel {
   fecha_subido DateTime @default(now())
   fecha_actualizado DateTime @updatedAt
 } 
+model Formulario {
+  id        Int      @id @default(autoincrement())
+  nombre_completo     String
+  gmail  String
+  cantidad_huespedes   Int
+  llegada DateTime @db.Date
+  salida DateTime @db.Date
+  fecha_subido DateTime @default(now())
+  fecha_actualizado DateTime @updatedAt
+} 
